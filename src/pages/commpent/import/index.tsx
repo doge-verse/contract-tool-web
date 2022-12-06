@@ -3,6 +3,14 @@ import React, { Component } from 'react';
 import upload from '../../../event/upload';
 import "./style.css"
 
+
+interface Data {
+    name: string;
+    proxy: string;
+    implement: string;
+    admin: string;
+}
+
 class SearchData extends Component {
     showFile = async (e: any) => {
         e.preventDefault()
@@ -11,14 +19,14 @@ class SearchData extends Component {
             const text = (e?.target?.result)
             console.log(text)
             alert(text)
-            upload.emit('sendValue', text)
+            let result: Data[] = []
+            upload.emit('sendValue', result)
 
         };
         reader.readAsText(e.target.files[0])
     }
 
     render() {
-
         return (
             <div className='upload'>
                 <h3>上传文件</h3>
