@@ -1,5 +1,5 @@
 import { Button, Container, Grid } from "@mui/material"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import login from "../../event/login";
 import {ethers} from 'ethers';
 
@@ -7,6 +7,7 @@ import {ethers} from 'ethers';
 import "./style.css"
 
 export default () => {
+    const [isConnected, setIsConnected] = useState(false);
 
     async function connect(){
         if (typeof window.ethereum !== 'undefined') {
@@ -18,12 +19,16 @@ export default () => {
 
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         let walletAddress = accounts[0];
+        if(walletAddress != null) {
+            setIsConnected(true);
+        }
         console.log("current address: ", walletAddress);
         login.emit('sendValue', walletAddress);
     }
 
     function disConnect(){
         login.emit('sendValue', null);
+        setIsConnected(false);
     }
 
     async function signin(){
@@ -38,8 +43,12 @@ export default () => {
                         <svg className="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlinkHref="#bootstrap" /></svg>
                     </a>
 
-                    <div className="col-md-3 text-end">
-                        <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
+                    <div className="col-md-4 text-end">
+                        {isConnected? 
+                            <button type="button" className="btn btn-outline-primary me-2" onClick={disConnect}>Disconnect</button>
+                            :
+                            <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
+                        }
                         <button type="button" className="btn btn-primary" onClick={signin}>Signin</button>
                     </div>
                 </header>
