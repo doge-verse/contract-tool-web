@@ -57,7 +57,7 @@ export default () => {
                             :
                             <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
                         }
-                        <button type="button" className="btn btn-primary" onClick={signin}>Signin</button>
+                        {/* <button type="button" className="btn btn-primary" onClick={signin}>Signin</button> */}
                     </div>
                 </header>
             </div>
