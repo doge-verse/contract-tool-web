@@ -1,12 +1,33 @@
 import { Button, Container, Grid } from "@mui/material"
 import { useEffect } from "react";
 import login from "../../event/login";
+import {ethers} from 'ethers';
+
 // import { FontLogoIcon } from "../../assets/svgs"
 import "./style.css"
 
 export default () => {
-    function signin(){
-        login.emit('sendValue', 'address')
+
+    async function connect(){
+        if (typeof window.ethereum !== 'undefined') {
+            console.log('MetaMask is installed!');
+        } else {
+            window.open("https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn");
+            return;
+        }
+
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        let walletAddress = accounts[0];
+        console.log("current address: ", walletAddress);
+        login.emit('sendValue', walletAddress);
+    }
+
+    function disConnect(){
+        login.emit('sendValue', null);
+    }
+
+    async function signin(){
+
     }
 
     return (
@@ -18,8 +39,8 @@ export default () => {
                     </a>
 
                     <div className="col-md-3 text-end">
-                        <button type="button" className="btn btn-outline-primary me-2" onClick={signin}>Login</button>
-                        <button type="button" className="btn btn-primary">Sign-up</button>
+                        <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
+                        <button type="button" className="btn btn-primary" onClick={signin}>Signin</button>
                     </div>
                 </header>
             </div>
