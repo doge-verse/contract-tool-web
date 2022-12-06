@@ -1,6 +1,7 @@
 import { Button, Container, Grid } from "@mui/material"
 import { useEffect, useState } from "react";
 import login from "../../event/login";
+import {CommonFun} from "../../common/common";
 import {ethers} from 'ethers';
 
 // import { FontLogoIcon } from "../../assets/svgs"
@@ -8,6 +9,7 @@ import "./style.css"
 
 export default () => {
     const [isConnected, setIsConnected] = useState(false);
+    const [addressFormat, setAddressFormat] = useState(null);
 
     async function connect(){
         if (typeof window.ethereum !== 'undefined') {
@@ -19,7 +21,10 @@ export default () => {
 
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         let walletAddress = accounts[0];
+
         if(walletAddress != null) {
+            console.log("Format addr: ", CommonFun.ellipsis(walletAddress));
+            setAddressFormat(CommonFun.ellipsis(walletAddress));
             setIsConnected(true);
         }
         console.log("current address: ", walletAddress);
@@ -29,6 +34,7 @@ export default () => {
     function disConnect(){
         login.emit('sendValue', null);
         setIsConnected(false);
+        setAddressFormat(null);
     }
 
     async function signin(){
@@ -43,9 +49,11 @@ export default () => {
                         <svg className="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlinkHref="#bootstrap" /></svg>
                     </a>
 
-                    <div className="col-md-4 text-end">
+                    <div className="col-md-5 text-end">
                         {isConnected? 
-                            <button type="button" className="btn btn-outline-primary me-2" onClick={disConnect}>Disconnect</button>
+                        <>
+                            <span>{addressFormat} </span>
+                            <button type="button" className="btn btn-outline-primary me-2" onClick={disConnect}>Disconnect</button></>
                             :
                             <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
                         }
