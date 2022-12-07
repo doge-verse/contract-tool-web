@@ -5,15 +5,9 @@ import Import from '../commpent/import'
 import Manage from '../commpent/manage'
 
 export default () => {
-    const [address, setAddress] = useState('')
-    login.on('sendValue', data => {
-        setAddress(data)
-    })
     return (
         <div className="App">
-            {
-                address != "" ? address : <Import></Import>
-            }
+            <Import></Import>
             <Manage></Manage>
         </div>
     )

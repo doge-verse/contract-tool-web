@@ -21,18 +21,22 @@ export default () => {
 
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         let walletAddress = accounts[0];
+        let provider = new ethers.providers.Web3Provider(window.ethereum);
+        let curSigner = provider.getSigner();
 
         if(walletAddress != null) {
             console.log("Format addr: ", CommonFun.ellipsis(walletAddress));
             setAddressFormat(CommonFun.ellipsis(walletAddress));
             setIsConnected(true);
         }
-        console.log("current address: ", walletAddress);
-        login.emit('sendValue', walletAddress);
+        // console.log("current address: ", JSON.stringify());
+        login.emit('sendWallet', {address: walletAddress, provider: provider, signer: curSigner});
     }
 
     function disConnect(){
-        login.emit('sendValue', null);
+        login.emit('sendAddress', null);
+        login.emit('sendProvider', null);
+        login.emit('sendSigner', null);
         setIsConnected(false);
         setAddressFormat(null);
     }
