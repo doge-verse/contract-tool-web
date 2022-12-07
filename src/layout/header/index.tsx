@@ -19,7 +19,7 @@ export default () => {
             return;
         }
 
-        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         let walletAddress = accounts[0];
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         let curSigner = provider.getSigner();

@@ -85,7 +85,7 @@ export default function StickyHeadTable() {
     
     const [curAddress, setCurAddress] = useState('');
     const [curProvider, setCurProvider] = useState({});
-    const [curSigner, setCurSigner] = useState({});
+    const [curSigner, setCurSigner] = useState(undefined);
     const [isFileLoaded, setIsFileLoaded] = useState(false);
 
     const changeNewAdmin = (e: any) => {
@@ -198,9 +198,9 @@ export default function StickyHeadTable() {
                         <TableBody>
                             {arr
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row) => {
+                                .map((row,idx) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.index}>
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={idx}>
                                             {columns.map((column) => {
                                                 const value = row[column.id];
                                                 return (
