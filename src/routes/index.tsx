@@ -2,10 +2,17 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const routes = [
+    
     {
         path: '/',
         name: 'Main',
-        loader: () => import('../main')
+        loader: () => import('../pages/main')
+    },
+    
+    {
+        path: '/notifier',
+        name: 'Notifier',
+        loader: () => import('../pages/notifier')
     }
 ];
 
