@@ -13,6 +13,7 @@ export default () => {
     let storage = new LocalstorageService();
     const [isConnected, setIsConnected] = useState(storage.getItem('isConnected'));
     const [addressFormat, setAddressFormat] = useState(storage.getItem('addressFormat'));
+    const [loginToken, setLoginToken] = useState(storage.getItem('loginToken'));
 
     async function connect() {
         if (typeof window.ethereum !== 'undefined') {
@@ -57,7 +58,12 @@ export default () => {
             },
         });
         console.log("Login res :", loginRes);
-        if (loginRes?.code == 0) {
+        if (loginRes?.data.code == 0) {
+            console.log("Login Token res :", loginRes.data.data.token);
+            storage.setItem({
+                name: 'loginToken',
+                value: loginRes.data.data.token,
+            });
             login.emit('isLogin', true);
         }
     }
@@ -86,6 +92,7 @@ export default () => {
                     <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
                         <li><a href="/" className="nav-link px-2 link-dark">Parser</a></li>
                         <li><a href="/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
+                        <li><a href="https://docs.upgrade-doge.xyz/" className="nav-link px-2 link-dark">Docs</a></li>
                     </ul>
                     <div className="col-md-3 text-end">
                         {isConnected ?
