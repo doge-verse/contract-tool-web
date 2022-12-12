@@ -118,10 +118,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {history.map((historyRow,idx) => (
+                                    {history.map((historyRow, idx) => (
                                         <TableRow key={idx}>
                                             <TableCell component="th" scope="row">
-                                                {(new Date((historyRow['updatedAt'] * 1000))).toISOString().replace('T',' ').replace('.000Z','')}
+                                                {
+                                                    new Date((historyRow['updateTime'] * 1000))
+                                                        .toISOString()
+                                                        .replace('T', ' ')
+                                                        .replace('.000Z', '')
+                                                }
                                             </TableCell>
                                             <TableCell>{historyRow['previousOwner']}</TableCell>
                                             <TableCell align="right">{historyRow['newOwner']}</TableCell>
@@ -211,12 +216,20 @@ export default function CollapsibleTable() {
                 });
                 if (res.data.code == 0) {
                     setArr(res.data.data.list.map((x: any) => {
-                        return createData(x.id,x.name,
-                            (networks.filter((_x: any) => _x.value == x.network)[0].label).toString()
-                            ,
-                            (x.proxyOwner.substring(0, x.proxyOwner.length / 2) + ' ' + x.proxyOwner.substring(x.proxyOwner.length / 2, x.proxyOwner.length).toString()),
-                            (x.proxyAddress.substring(0, x.proxyAddress.length / 2) + ' ' + x.proxyAddress.substring(x.proxyAddress.length / 2, x.proxyAddress.length).toString()),
-                            (new Date((x.createdAt * 1000))).toISOString().replace('T',' ').replace('.000Z','')
+                        return createData(
+                            x.id,
+                            x.name,
+                            networks.filter((_x: any) => _x.value == x.network)[0].label,
+                            (x.proxyOwner.substring(0, x.proxyOwner.length / 2)
+                                + ' '
+                                + x.proxyOwner.substring(x.proxyOwner.length / 2, x.proxyOwner.length)),
+                            (x.proxyAddress.substring(0, x.proxyAddress.length / 2)
+                                + ' '
+                                + x.proxyAddress.substring(x.proxyAddress.length / 2, x.proxyAddress.length)),
+                            (new Date((x.createdAt * 1000)))
+                                .toISOString()
+                                .replace('T', ' ')
+                                .replace('.000Z', '')
                         )
                     }))
                 }
