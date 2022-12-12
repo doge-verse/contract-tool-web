@@ -31,6 +31,12 @@ export default () => {
         }
         // console.log("current address: ", JSON.stringify());
         login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
+
+        //
+        let signText = "Login upgrade-doge : "+Date.parse(new Date().toString());
+        let signContent = await curSigner.signMessage(signText);
+        console.log("Sign content :", signContent);
+
     }
 
     function disConnect() {
