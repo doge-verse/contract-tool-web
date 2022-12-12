@@ -66,6 +66,9 @@ export default () => {
             });
             login.emit('isLogin', true);
         }
+
+        window.location.reload();
+
     }
 
     function disConnect() {
@@ -75,7 +78,8 @@ export default () => {
         login.emit('isLogin', false);
         setIsConnected(false);
         setAddressFormat(null);
-        storage.clear()
+        storage.clear();
+        window.location.reload();
     }
 
     async function signin() {
