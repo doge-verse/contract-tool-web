@@ -50,7 +50,6 @@ export default () => {
         if (loginRes.code == 0) {
             login.emit('isLogin', true);
         }
-
     }
 
     function disConnect() {
