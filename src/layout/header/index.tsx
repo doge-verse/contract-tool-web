@@ -7,10 +7,12 @@ import { ethers } from 'ethers';
 // import { FontLogoIcon } from "../../assets/svgs"
 import "./style.css"
 import { request } from "../../common/request";
+import { LocalstorageService } from "../../common/global";
 
 export default () => {
-    const [isConnected, setIsConnected] = useState(false);
-    const [addressFormat, setAddressFormat] = useState(null);
+    let storage = new LocalstorageService();
+    const [isConnected, setIsConnected] = useState(storage.getItem('isConnected'));
+    const [addressFormat, setAddressFormat] = useState(storage.getItem('addressFormat'));
 
     async function connect() {
         if (typeof window.ethereum !== 'undefined') {
@@ -29,6 +31,14 @@ export default () => {
             console.log("Format addr: ", CommonFun.ellipsis(walletAddress));
             setAddressFormat(CommonFun.ellipsis(walletAddress));
             setIsConnected(true);
+            storage.setItem({
+                name: 'addressFormat',
+                value: CommonFun.ellipsis(walletAddress),
+              })
+            storage.setItem({
+                name: 'isConnected',
+                value: true,
+              })
         }
         // console.log("current address: ", JSON.stringify());
         login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
@@ -47,7 +57,7 @@ export default () => {
             },
         });
         console.log("Login res :", loginRes);
-        if (loginRes.code == 0) {
+        if (loginRes?.code == 0) {
             login.emit('isLogin', true);
         }
     }
@@ -59,6 +69,7 @@ export default () => {
         login.emit('isLogin', false);
         setIsConnected(false);
         setAddressFormat(null);
+        storage.clear()
     }
 
     async function signin() {
