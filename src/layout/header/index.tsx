@@ -73,10 +73,8 @@ export default () => {
                     <a href="/" className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
                         <svg className="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlinkHref="#bootstrap" /></svg>
                     </a>
-
-
                     <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="/" className="nav-link px-2 link-dark">Parser</a></li>
+                        <li><a href="/" className="nav-link px-2 link-dark">🐶Parser</a></li>
                         <li><a href="/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
                     </ul>
                     <div className="col-md-5 text-end">
