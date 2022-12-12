@@ -6,8 +6,7 @@ import { ethers } from 'ethers';
 
 // import { FontLogoIcon } from "../../assets/svgs"
 import "./style.css"
-// import { request } from "../../common/request";
-import axios from "axios";
+import { request } from "../../common/request";
 
 export default () => {
     const [isConnected, setIsConnected] = useState(false);
@@ -35,26 +34,22 @@ export default () => {
         login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
 
         //
-        let signText = "Login upgrade-doge : "+Date.parse(new Date().toString());
+        let signText = "Login-upgrade-doge-"+Date.parse(new Date().toString());
         let signContent = await curSigner.signMessage(signText);
         console.log("Sign content :", signContent);
 
-        // const loginRes = await request('login', {
-        //   method: 'post',
-        //   params: {
-        //     "address": walletAddress,
-        //     "signData": signText,
-        //     "signature": signContent
-        //   },
-        // });
-
-        const loginRes = await axios.post('http://107.173.87.120:8080/api/login', {
+        const loginRes = await request('login', {
+          method: 'post',
+          params: {
             "address": walletAddress,
             "signData": signText,
             "signature": signContent
+          },
         });
-
         console.log("Login res :" ,loginRes);
+        if(loginRes.code == 0) {
+            login.emit('isLogin', true);
+        }
 
     }
 
@@ -62,6 +57,7 @@ export default () => {
         login.emit('sendAddress', null);
         login.emit('sendProvider', null);
         login.emit('sendSigner', null);
+        login.emit('isLogin', false);
         setIsConnected(false);
         setAddressFormat(null);
     }
@@ -80,7 +76,7 @@ export default () => {
 
 
                     <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="/" className="nav-link px-2 link-secondary">Main</a></li>
+                        <li><a href="/" className="nav-link px-2 link-dark">Parser</a></li>
                         <li><a href="/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
                     </ul>
                     <div className="col-md-5 text-end">

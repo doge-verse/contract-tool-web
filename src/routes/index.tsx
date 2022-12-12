@@ -5,7 +5,7 @@ const routes = [
     
     {
         path: '/',
-        name: 'Main',
+        name: 'Parser',
         loader: () => import('../pages/main')
     },
     
