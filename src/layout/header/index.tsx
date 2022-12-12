@@ -6,6 +6,8 @@ import { ethers } from 'ethers';
 
 // import { FontLogoIcon } from "../../assets/svgs"
 import "./style.css"
+// import { request } from "../../common/request";
+import axios from "axios";
 
 export default () => {
     const [isConnected, setIsConnected] = useState(false);
@@ -36,6 +38,23 @@ export default () => {
         let signText = "Login upgrade-doge : "+Date.parse(new Date().toString());
         let signContent = await curSigner.signMessage(signText);
         console.log("Sign content :", signContent);
+
+        // const loginRes = await request('login', {
+        //   method: 'post',
+        //   params: {
+        //     "address": walletAddress,
+        //     "signData": signText,
+        //     "signature": signContent
+        //   },
+        // });
+
+        const loginRes = await axios.post('http://107.173.87.120:8080/api/login', {
+            "address": walletAddress,
+            "signData": signText,
+            "signature": signContent
+        });
+
+        console.log("Login res :" ,loginRes);
 
     }
 
