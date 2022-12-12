@@ -153,7 +153,7 @@ export default function CollapsibleTable() {
     const [currentName, setCurrentName] = useState('');
     const [proxyAdminAddress, setProxyAdminAddress] = useState('');
     const [email, setEmail] = useState('');
-    const [network, setNetwork] = useState('');
+    const [network, setNetwork] = useState(0);
 
 
 
@@ -166,7 +166,7 @@ export default function CollapsibleTable() {
     }
 
     const changeNetwork = (e: any, newInputValue: any, index: any) => {
-        setNetwork(networks?.filter((x: any) => x.label == newInputValue)[0].value.toString());
+        setNetwork(networks?.filter((x: any) => x.label == newInputValue)[0].value);
     }
 
     const changeProxyAdmin = (e: any) => {
@@ -181,7 +181,7 @@ export default function CollapsibleTable() {
 
     const handleSubmitChangeOwner = async () => {
         console.log(storage.getItem("loginToken"))
-        if (currentName == '' || email == '' || network == '' || proxyAdminAddress == '') {
+        if (currentName == '' || email == '' || network == 0 || proxyAdminAddress == '') {
             setAlert(true);
             setTimeout(() => {
                 setAlert(false);
@@ -263,7 +263,7 @@ export default function CollapsibleTable() {
                 storage.getItem('loginToken') ?
                     <>
                         <div>
-                            <button type="button" className="btn btn-outline-primary me-2" onClick={handleClickOpenAddNotifier}>Notifier</button>
+                            <button type="button" className="btn btn-outline-primary me-2" onClick={handleClickOpenAddNotifier}>New Notifier</button>
                             <br />
                         </div>
                         <br />
@@ -291,7 +291,7 @@ export default function CollapsibleTable() {
                 </Table>
             </TableContainer>
             <Dialog open={openChangeOwner} onClose={handleCloseChangeOwner}>
-                <DialogTitle>Add Notifier</DialogTitle>
+                <DialogTitle>New Notifier</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Please enter your information.
