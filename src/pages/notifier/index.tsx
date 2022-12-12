@@ -121,11 +121,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                                     {history.map((historyRow,idx) => (
                                         <TableRow key={idx}>
                                             <TableCell component="th" scope="row">
-                                                {(new Date((historyRow?.updatedAt * 1000))).toISOString()}
+                                                {(new Date((historyRow['updatedAt'] * 1000))).toISOString().replace('T',' ').replace('.000Z','')}
                                             </TableCell>
-                                            <TableCell>{historyRow?.previousOwner}</TableCell>
-                                            <TableCell align="right">{historyRow?.newOwner}</TableCell>
-                                            <TableCell align="right">{historyRow?.updateTX}</TableCell>
+                                            <TableCell>{historyRow['previousOwner']}</TableCell>
+                                            <TableCell align="right">{historyRow['newOwner']}</TableCell>
+                                            <TableCell align="right">{historyRow['updateTX']}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -161,8 +161,7 @@ export default function CollapsibleTable() {
     }
 
     const changeNetwork = (e: any, newInputValue: any, index: any) => {
-        console.log(networks?.filter((x: any) => x.label == newInputValue)[0].value)
-        setNetwork(networks?.filter((x: any) => x.label == newInputValue)[0].value);
+        setNetwork(networks?.filter((x: any) => x.label == newInputValue)[0].value.toString());
     }
 
     const changeProxyAdmin = (e: any) => {
@@ -217,7 +216,7 @@ export default function CollapsibleTable() {
                             ,
                             (x.proxyOwner.substring(0, x.proxyOwner.length / 2) + ' ' + x.proxyOwner.substring(x.proxyOwner.length / 2, x.proxyOwner.length).toString()),
                             (x.proxyAddress.substring(0, x.proxyAddress.length / 2) + ' ' + x.proxyAddress.substring(x.proxyAddress.length / 2, x.proxyAddress.length).toString()),
-                            (new Date((x.createdAt * 1000))).toISOString()
+                            (new Date((x.createdAt * 1000))).toISOString().replace('T',' ').replace('.000Z','')
                         )
                     }))
                 }
