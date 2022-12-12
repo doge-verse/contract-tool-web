@@ -1,8 +1,8 @@
 import { Button, Container, Grid } from "@mui/material"
 import { useEffect, useState } from "react";
 import login from "../../event/login";
-import {CommonFun} from "../../common/common";
-import {ethers} from 'ethers';
+import { CommonFun } from "../../common/common";
+import { ethers } from 'ethers';
 
 // import { FontLogoIcon } from "../../assets/svgs"
 import "./style.css"
@@ -11,7 +11,7 @@ export default () => {
     const [isConnected, setIsConnected] = useState(false);
     const [addressFormat, setAddressFormat] = useState(null);
 
-    async function connect(){
+    async function connect() {
         if (typeof window.ethereum !== 'undefined') {
             console.log('MetaMask is installed!');
         } else {
@@ -24,16 +24,16 @@ export default () => {
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         let curSigner = provider.getSigner();
 
-        if(walletAddress != null) {
+        if (walletAddress != null) {
             console.log("Format addr: ", CommonFun.ellipsis(walletAddress));
             setAddressFormat(CommonFun.ellipsis(walletAddress));
             setIsConnected(true);
         }
         // console.log("current address: ", JSON.stringify());
-        login.emit('sendWallet', {address: walletAddress, provider: provider, signer: curSigner});
+        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
     }
 
-    function disConnect(){
+    function disConnect() {
         login.emit('sendAddress', null);
         login.emit('sendProvider', null);
         login.emit('sendSigner', null);
@@ -41,7 +41,7 @@ export default () => {
         setAddressFormat(null);
     }
 
-    async function signin(){
+    async function signin() {
 
     }
 
@@ -53,11 +53,16 @@ export default () => {
                         <svg className="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlinkHref="#bootstrap" /></svg>
                     </a>
 
+
+                    <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="/" className="nav-link px-2 link-secondary">Main</a></li>
+                        <li><a href="/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
+                    </ul>
                     <div className="col-md-5 text-end">
-                        {isConnected? 
-                        <>
-                            <span>{addressFormat} </span>
-                            <button type="button" className="btn btn-outline-primary me-2" onClick={disConnect}>Disconnect</button></>
+                        {isConnected ?
+                            <>
+                                <span>{addressFormat} </span>
+                                <button type="button" className="btn btn-outline-primary me-2" onClick={disConnect}>Disconnect</button></>
                             :
                             <button type="button" className="btn btn-outline-primary me-2" onClick={connect}>Connect</button>
                         }
