@@ -89,7 +89,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         onClick={() => {
                             setOpen(!open);
                             console.log(2);
-                            fetchData(row.id)
+                            if (!open)
+                                fetchData(row.id)
                         }}
                     >
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
