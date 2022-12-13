@@ -36,7 +36,7 @@ export default () => {
             tempFileText = networkFileText;
         }
         const networkFileJson = JSON.parse(tempFileText);
-        console.log("Target :", networkFileJson, networkFileJson.admin, typeof(networkFileJson));
+        console.log("Target :", networkFileJson, networkFileJson.admin, typeof(networkFileJson), curSigner);
         let result: ProxyData[] = [];
         if (networkFileJson != null && networkFileJson != undefined) {
             console.log("admin addr :", networkFileJson['admin'].address);
@@ -95,7 +95,7 @@ export default () => {
     const [networkFileText, setNetworkFileText] = useState('');
     
     login.on('sendWallet', data => {
-        // console.log("Import wallet :", data);
+        console.log("CreateProxyData Import wallet ！！！:", data);
         setCurAddress(data.address);
         setCurProvider(data.provider);
         setCurSigner(data.signer);

@@ -13,18 +13,18 @@ export default () => {
     let storage = new LocalstorageService();
     const [isConnected, setIsConnected] = useState(storage.getItem('isConnected'));
     const [addressFormat, setAddressFormat] = useState(storage.getItem('addressFormat'));
+    const [walletAddress, setWalletAddress] = useState(storage.getItem('walletAddress'));
     const [loginToken, setLoginToken] = useState(storage.getItem('loginToken'));
 
-    async function connect() {
-        if (typeof window.ethereum !== 'undefined') {
-            console.log('MetaMask is installed!');
-        } else {
-            window.open("https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn");
-            return;
+    useEffect(() => {
+        if(loginToken && isConnected){
+            console.log("Before _initProvider...");
+            _initProvider();
         }
+    }, []);
 
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        let walletAddress = accounts[0];
+    function _initProvider() {
+        
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         let curSigner = provider.getSigner();
 
@@ -35,39 +35,55 @@ export default () => {
             storage.setItem({
                 name: 'addressFormat',
                 value: CommonFun.ellipsis(walletAddress),
-              })
+            });
             storage.setItem({
                 name: 'isConnected',
                 value: true,
-              })
-        }
-        // console.log("current address: ", JSON.stringify());
-        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
-
-        //
-        let signText = "Login-upgrade-doge-" + Date.parse(new Date().toString());
-        let signContent = await curSigner.signMessage(signText);
-        console.log("Sign content :", signContent);
-
-        const loginRes = await request('login', {
-            method: 'post',
-            params: {
-                "address": walletAddress,
-                "signData": signText,
-                "signature": signContent
-            },
-        });
-        console.log("Login res :", loginRes);
-        if (loginRes?.data.code == 0) {
-            console.log("Login Token res :", loginRes.data.data.token);
-            storage.setItem({
-                name: 'loginToken',
-                value: loginRes.data.data.token,
             });
-            login.emit('isLogin', true);
+        }
+        console.log("current signer: ", curSigner);
+        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
+        console.log("After sendWallet...");
+
+        return {address: walletAddress, provider: provider, signer: curSigner};
+    }
+
+    async function connect() {
+        if (typeof window.ethereum !== 'undefined') {
+            console.log('MetaMask is installed!');
+        } else {
+            window.open("https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn");
+            return;
         }
 
-
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if(accounts[0]) {
+            setWalletAddress(accounts[0]);
+            storage.setItem({name:'walletAddress', value:accounts[0]});
+            
+            let initProvider = _initProvider();
+            let signText = "Login-upgrade-doge-" + Date.parse(new Date().toString());
+            let signContent = await initProvider.signer.signMessage(signText);
+            console.log("Sign content :", signContent, accounts[0]);
+    
+            const loginRes = await request('login', {
+                method: 'post',
+                params: {
+                    "address": accounts[0],
+                    "signData": signText,
+                    "signature": signContent
+                },
+            });
+            console.log("Login res :", loginRes);
+            if (loginRes?.data.code == 0) {
+                console.log("Login Token res :", loginRes.data.data.token);
+                storage.setItem({
+                    name: 'loginToken',
+                    value: loginRes.data.data.token,
+                });
+                login.emit('isLogin', true);
+            }
+        }
     }
 
     function disConnect() {
@@ -125,5 +141,6 @@ export default () => {
 
             </Container> */}
         </div>
-    )
+    );
+
 }
