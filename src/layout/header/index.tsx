@@ -67,7 +67,6 @@ export default () => {
             login.emit('isLogin', true);
         }
 
-        window.location.reload();
 
     }
 

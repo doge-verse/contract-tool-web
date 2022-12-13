@@ -154,6 +154,7 @@ export default function CollapsibleTable() {
     const [proxyAdminAddress, setProxyAdminAddress] = useState('');
     const [email, setEmail] = useState('');
     const [network, setNetwork] = useState(0);
+    const [loginState, setLoginState] = useState(false);
 
 
 
@@ -205,6 +206,11 @@ export default function CollapsibleTable() {
             setOpenChangeOwner(false);
         }
     };
+
+    login.on('isLogin', data => {
+        setLoginState(data);
+    });
+
     const fetchData = useCallback(
         async (page: number = 0, pageSize: number = 20) => {
             try {
@@ -260,7 +266,7 @@ export default function CollapsibleTable() {
     return (
         <>
             {
-                storage.getItem('loginToken') ?
+                storage.getItem('loginToken') || loginState ?
                     <>
                         <div>
                             <button type="button" className="btn btn-outline-primary me-2" onClick={handleClickOpenAddNotifier}>New Notifier</button>
