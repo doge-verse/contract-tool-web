@@ -1,10 +1,12 @@
 import { Button } from '@mui/material';
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import upload from '../../../event/upload';
 import "./style.css";
 import { ethers } from 'ethers';
 import proxyAdminAbi from "../../../common/abis/ProxyAdmin.json";
 import login from '../../../event/login';
+import { LocalstorageService } from '../../../common/global';
+import { CommonFun } from '../../../common/common';
 
 interface ProxyData {
     name: string;
@@ -29,14 +31,14 @@ export default () => {
     async function _parsingFile(e: any, curSigner: any) {
         setIsloaded(false);
         let tempFileText = e?.target?.result;
-        if(tempFileText) {
+        if (tempFileText) {
             setNetworkFileText(tempFileText);
             // console.log("setNetworkFileText :::", typeof(tempFileText), networkFileText);
-        }else{
+        } else {
             tempFileText = networkFileText;
         }
         const networkFileJson = JSON.parse(tempFileText);
-        console.log("Target :", networkFileJson, networkFileJson.admin, typeof(networkFileJson), curSigner);
+        console.log("Target :", networkFileJson, networkFileJson.admin, typeof (networkFileJson), curSigner);
         let result: ProxyData[] = [];
         if (networkFileJson != null && networkFileJson != undefined) {
             console.log("admin addr :", networkFileJson['admin'].address);
@@ -59,7 +61,7 @@ export default () => {
                         result.push(createProxyData(contractName, networkFileJson['proxies'][i].address.toString(), curImplAddr, curProxyAdminAddr, curOwnerAddr));
                         console.log("Data from blockchain:", i, j, contractName, curImplAddr);
 
-                        setLoadingStatus(" (Loading... "+i+"/"+networkFileJson['proxies'].length+")");
+                        setLoadingStatus(" (Loading... " + i + "/" + networkFileJson['proxies'].length + ")");
                     }
                 }
             }
@@ -81,33 +83,51 @@ export default () => {
         reader.readAsText(e.target.files[0])
     }
 
-    async function handleRefresh(e: any, curSigner: any)  {
-        if(isloaded){
+    async function handleRefresh(e: any, curSigner: any) {
+        if (isloaded) {
             _parsingFile(e, curSigner);
         }
     }
+    let storage = new LocalstorageService();
 
-    const [curAddress, setCurAddress] = useState(null);
-    const [curProvider, setCurProvider] = useState(null);
-    const [curSigner, setCurSigner] = useState(null);
+    const [curAddress, setCurAddress] = useState(storage.getItem('walletAddress'));
+    const [curProvider, setCurProvider] = useState(new Object());
+    const [curSigner, setCurSigner] = useState(new Object());
     const [loadingStatus, setLoadingStatus] = useState('');
     const [isloaded, setIsloaded] = useState(false);
     const [networkFileText, setNetworkFileText] = useState('');
-    
+
+
+    function _initProvider() {
+        let provider = new ethers.providers.Web3Provider(window.ethereum);
+        let curSigner = provider.getSigner();
+        return { address: curAddress, provider: provider, signer: curSigner };
+    }
+
     login.on('sendWallet', data => {
-        console.log("CreateProxyData Import wallet ！！！:", data);
-        setCurAddress(data.address);
-        setCurProvider(data.provider);
-        setCurSigner(data.signer);
+        if (data) {
+            console.log("CreateProxyData Import wallet ！！！:", data);
+            setCurAddress(data.address);
+            setCurProvider(data.provider);
+            setCurSigner(data.signer);
+        }
     });
+    useEffect(() => {
+        if (curAddress) {
+            let data = _initProvider();
+            setCurAddress(data.address);
+            setCurProvider(data.provider);
+            setCurSigner(data.signer);
+        }
+    }, []);
     return (
         <div className='upload'>
-            <h3>Import Openzeppelin Networks File {loadingStatus} </h3>
-            {isloaded?
-            <>
-                <button type="button" className="btn btn-outline-primary me-2" onClick={(e) => handleRefresh(e, curSigner)}>🔁</button>
-            </>
-            :""}
+            <h3>Import Openzeppelin Networks File {loadingStatus}</h3>
+            {isloaded ?
+                <>
+                    <button type="button" className="btn btn-outline-primary me-2" onClick={(e) => handleRefresh(e, curSigner)}>🔁</button>
+                </>
+                : ""}
             <input style={{ 'display': 'none' }} type="file" id='fileupload' onChange={(e) => showFile(e, curSigner)} />
             <Button onClick={() => { document.getElementById('fileupload')?.click() }}>Click to Import</Button>
         </div>

@@ -17,14 +17,14 @@ export default () => {
     const [loginToken, setLoginToken] = useState(storage.getItem('loginToken'));
 
     useEffect(() => {
-        if(loginToken && isConnected){
+        if (loginToken && isConnected) {
             console.log("Before _initProvider...");
             _initProvider();
         }
     }, []);
 
     function _initProvider() {
-        
+
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         let curSigner = provider.getSigner();
 
@@ -42,10 +42,11 @@ export default () => {
             });
         }
         console.log("current signer: ", curSigner);
-        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner });
+        login.emit('sendWallet', null);
+        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner, timespan: Number(new Date()) });
         console.log("After sendWallet...");
 
-        return {address: walletAddress, provider: provider, signer: curSigner};
+        return { address: walletAddress, provider: provider, signer: curSigner };
     }
 
     async function connect() {
@@ -57,15 +58,15 @@ export default () => {
         }
 
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if(accounts[0]) {
+        if (accounts[0]) {
             setWalletAddress(accounts[0]);
-            storage.setItem({name:'walletAddress', value:accounts[0]});
-            
+            storage.setItem({ name: 'walletAddress', value: accounts[0] });
+
             let initProvider = _initProvider();
             let signText = "Login-upgrade-doge-" + Date.parse(new Date().toString());
             let signContent = await initProvider.signer.signMessage(signText);
             console.log("Sign content :", signContent, accounts[0]);
-    
+
             const loginRes = await request('login', {
                 method: 'post',
                 params: {

@@ -13,9 +13,10 @@ import { useState } from 'react';
 import login from '../../../event/login';
 import proxyAdminAbi from "../../../common/abis/ProxyAdmin.json";
 import { ethers } from 'ethers';
+import { LocalstorageService } from '../../../common/global';
 
 interface Column {
-    id: 'index' | 'name' | 'proxy' | 'implement' | 'proxyAdmin'| 'proxyOwner' | 'button';
+    id: 'index' | 'name' | 'proxy' | 'implement' | 'proxyAdmin' | 'proxyOwner' | 'button';
     label: string;
     minWidth?: number;
     align?: 'right';
@@ -68,7 +69,7 @@ function createData(
     return { index, name, proxy, implement, proxyAdmin, proxyOwner };
 }
 
-var rows:Data[] = [
+var rows: Data[] = [
     // createData(1, 'PausableUpgradeable', '0x210899C848A107bd5ec3BEfF3eDfEeAaE7aD8723', '0x210899C848A107bd5ec3BEfF3eDfEeAaE7aD8723', '0x210899C848A107bd5ec3BEfF3eDfEeAaE7aD8723'),
 ];
 
@@ -82,8 +83,10 @@ export default function StickyHeadTable() {
     const [arr, setArr] = useState([]);
     const [newOwnerAddr, setNewOwnerAddr] = useState(null);
     const [proxyOwnerAddr, setProxyOwnerAddr] = useState('');
-    
-    const [curAddress, setCurAddress] = useState('');
+
+    let storage = new LocalstorageService();
+
+    const [curAddress, setCurAddress] = useState(storage.getItem('walletAddress'));
     const [curProvider, setCurProvider] = useState({});
     const [curSigner, setCurSigner] = useState(undefined);
     const [isFileLoaded, setIsFileLoaded] = useState(false);
@@ -95,7 +98,7 @@ export default function StickyHeadTable() {
     const changeNewOwner = (e: any) => {
         setNewOwnerAddr(e.target.value);
     }
-    
+
     const handleClickOpen = (row: any) => {
         setCurProxyAdmin(row.admin);
         setCurProxy(row.proxy);
@@ -112,9 +115,9 @@ export default function StickyHeadTable() {
 
     const handleClickOpenChangeOwner = () => {
         console.log("enter handleClickOpenChangeOwner: ", curAddress, proxyOwnerAddr);
-        if(curAddress.toLowerCase() == proxyOwnerAddr.toLowerCase()) {
+        if (curAddress.toLowerCase() == proxyOwnerAddr.toLowerCase()) {
             setOpenChangeOwner(true);
-        }else{
+        } else {
             alert("Permission error");
         }
     };
@@ -164,21 +167,38 @@ export default function StickyHeadTable() {
     });
 
     login.on('sendWallet', data => {
-        setCurAddress(data.address);
-        setCurProvider(data.provider);
-        setCurSigner(data.signer);
+        if (data) {
+            setCurAddress(data.address);
+            setCurProvider(data.provider);
+            setCurSigner(data.signer);
+        }
     });
+    function _initProvider() {
+        let provider = new ethers.providers.Web3Provider(window.ethereum);
+        let curSigner = provider.getSigner();
+        return { address: curAddress, provider: provider, signer: curSigner };
+    }
+
+    React.useEffect(() => {
+        console.log(curAddress)
+        if (curAddress) {
+            let data = _initProvider();
+            setCurAddress(data.address);
+            setCurProvider(data.provider);
+            setCurSigner(data.signer);
+        }
+    }, []);
 
     return (
         <>
-            {isFileLoaded? 
-            <>
-            <div>
-                <button type="button" className="btn btn-outline-primary me-2" onClick={handleClickOpenChangeOwner}>Change Proxy Owner</button>
-                <br/>
-            </div>
-            </>
-            :""}
+            {isFileLoaded ?
+                <>
+                    <div>
+                        <button type="button" className="btn btn-outline-primary me-2" onClick={handleClickOpenChangeOwner}>Change Proxy Owner</button>
+                        <br />
+                    </div>
+                </>
+                : ""}
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -198,18 +218,18 @@ export default function StickyHeadTable() {
                         <TableBody>
                             {arr
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row,idx) => {
+                                .map((row, idx) => {
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={idx}>
                                             {columns.map((column) => {
                                                 const value = row[column.id];
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                    {
-                                                        column.format && typeof value === 'number'
-                                                            ? column.format(value)
-                                                            : value
-                                                    }
+                                                        {
+                                                            column.format && typeof value === 'number'
+                                                                ? column.format(value)
+                                                                : value
+                                                        }
                                                     </TableCell>
                                                 );
                                             })}
