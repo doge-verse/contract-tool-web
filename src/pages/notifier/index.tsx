@@ -96,10 +96,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.email}
+                    {row.name}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.email}
                 </TableCell>
                 <TableCell align="right">{row.calories}</TableCell>
                 <TableCell align="right">{row.fat}</TableCell>
