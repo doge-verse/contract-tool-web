@@ -19,22 +19,22 @@ export default () => {
     useEffect(() => {
         if (loginToken && isConnected) {
             console.log("Before _initProvider...");
-            _initProvider();
+            _initProvider(null);
         }
     }, []);
 
-    function _initProvider() {
+    function _initProvider(walletAddr: any) {
 
         let provider = new ethers.providers.Web3Provider(window.ethereum);
         let curSigner = provider.getSigner();
-
-        if (walletAddress != null) {
-            console.log("Format addr: ", CommonFun.ellipsis(walletAddress));
-            setAddressFormat(CommonFun.ellipsis(walletAddress));
+        let wd = walletAddress || walletAddr;
+        if (wd != null) {
+            console.log("Format addr: ", CommonFun.ellipsis(wd));
+            setAddressFormat(CommonFun.ellipsis(wd));
             setIsConnected(true);
             storage.setItem({
                 name: 'addressFormat',
-                value: CommonFun.ellipsis(walletAddress),
+                value: CommonFun.ellipsis(wd),
             });
             storage.setItem({
                 name: 'isConnected',
@@ -43,10 +43,10 @@ export default () => {
         }
         console.log("current signer: ", curSigner);
         login.emit('sendWallet', null);
-        login.emit('sendWallet', { address: walletAddress, provider: provider, signer: curSigner, timespan: Number(new Date()) });
+        login.emit('sendWallet', { address: wd, provider: provider, signer: curSigner, timespan: Number(new Date()) });
         console.log("After sendWallet...");
 
-        return { address: walletAddress, provider: provider, signer: curSigner };
+        return { address: wd, provider: provider, signer: curSigner };
     }
 
     async function connect() {
@@ -59,10 +59,11 @@ export default () => {
 
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         if (accounts[0]) {
+            console.log(234)
             setWalletAddress(accounts[0]);
             storage.setItem({ name: 'walletAddress', value: accounts[0] });
 
-            let initProvider = _initProvider();
+            let initProvider = _initProvider(accounts[0]);
             let signText = "Login-upgrade-doge-" + Date.parse(new Date().toString());
             let signContent = await initProvider.signer.signMessage(signText);
             console.log("Sign content :", signContent, accounts[0]);

@@ -215,6 +215,7 @@ export default function CollapsibleTable() {
 
     login.on('isLogin', data => {
         setLoginState(data);
+        fetchData();
     });
 
     const fetchData = useCallback(
