@@ -52,9 +52,12 @@ export default () => {
                             // tempItem.admin = curAdminAddr;
                             result.push(createProxyData(contractName, networkFileJson['proxies'][i].address.toString(), curImplAddr, curProxyAdminAddr, curOwnerAddr));
                             console.log("Data from blockchain:", i, j, contractName, curImplAddr);
+
+                            setLoadingStatus(" (Loading... "+i+"/"+networkFileJson['proxies'].length+")");
                         }
                     }
                 }
+                setLoadingStatus('');
                 upload.emit('sendValue', result);
                 upload.emit('sendOwner', curOwnerAddr);
                 upload.emit('sendProxyAdmin', networkFileJson['admin'].address);
@@ -68,6 +71,8 @@ export default () => {
     const [curAddress, setCurAddress] = useState(null);
     const [curProvider, setCurProvider] = useState(null);
     const [curSigner, setCurSigner] = useState(null);
+    const [loadingStatus, setLoadingStatus] = useState('');
+    
     login.on('sendWallet', data => {
         // console.log("Import wallet :", data);
         setCurAddress(data.address);
@@ -76,7 +81,7 @@ export default () => {
     });
     return (
         <div className='upload'>
-            <h3>Import Openzeppelin Networks File</h3>
+            <h3>Import Openzeppelin Networks File {loadingStatus} </h3>
             <input style={{ 'display': 'none' }} type="file" id='fileupload' onChange={(e) => showFile(e, curAddress, curProvider, curSigner)} />
             <Button onClick={() => { document.getElementById('fileupload')?.click() }}>Click to Import</Button>
         </div>
