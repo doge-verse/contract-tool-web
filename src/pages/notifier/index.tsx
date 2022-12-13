@@ -35,6 +35,7 @@ const networks = [
 
 function createData(
     id: string,
+    email: string,
     name: string,
     calories: string,
     fat: string,
@@ -43,6 +44,7 @@ function createData(
 ) {
     return {
         id,
+        email,
         name,
         calories,
         fat,
@@ -92,6 +94,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                     >
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="row">
+                    {row.email}
                 </TableCell>
                 <TableCell component="th" scope="row">
                     {row.name}
@@ -224,6 +229,7 @@ export default function CollapsibleTable() {
                     setArr(res.data.data.list.map((x: any) => {
                         return createData(
                             x.id,
+                            x.email,
                             x.name,
                             networks.filter((_x: any) => _x.value == x.network)[0].label,
                             (x.proxyOwner.substring(0, x.proxyOwner.length / 2)
@@ -283,6 +289,7 @@ export default function CollapsibleTable() {
                         <TableRow>
                             <TableCell />
                             <TableCell>Contract&nbsp;Name</TableCell>
+                            <TableCell>Email</TableCell>
                             <TableCell align="right">Network</TableCell>
                             <TableCell align="right">Proxy Owner</TableCell>
                             <TableCell align="right">Proxy Address</TableCell>
