@@ -185,7 +185,7 @@ export default function StickyHeadTable() {
             let data = _initProvider();
             setCurAddress(data.address);
             setCurProvider(data.provider);
-            setCurSigner(data.signer);
+            setCurSigner(data.signer as never);
         }
     }, []);
 
