@@ -112,7 +112,7 @@ export default () => {
                     </a>
                     <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
                         <li><a href="/" className="nav-link px-2 link-dark">Parser</a></li>
-                        <li><a href="/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
+                        <li><a href="/#/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
                         <li><a href="https://docs.upgrade-doge.xyz/" className="nav-link px-2 link-dark">Docs</a></li>
                     </ul>
                     <div className="col-md-3 text-end">
