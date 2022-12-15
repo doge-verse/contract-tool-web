@@ -15,6 +15,7 @@ export default () => {
     const [addressFormat, setAddressFormat] = useState(storage.getItem('addressFormat'));
     const [walletAddress, setWalletAddress] = useState(storage.getItem('walletAddress'));
     const [loginToken, setLoginToken] = useState(storage.getItem('loginToken'));
+    const [route, setRoute] = useState('parser');
 
     useEffect(() => {
         if (loginToken && isConnected) {
@@ -88,6 +89,7 @@ export default () => {
         }
     }
 
+    console.log(window.location.hash)
     function disConnect() {
         login.emit('sendAddress', null);
         login.emit('sendProvider', null);
@@ -110,10 +112,18 @@ export default () => {
                     <a href="/" className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none" style={{ fontSize: '2em' }}>
                         🐶 Uprade Doge
                     </a>
-                    <ul className="nav  col-md-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="/" className="nav-link px-2 link-dark">Parser</a></li>
-                        <li><a href="/#/notifier" className="nav-link px-2 link-dark">Notifier</a></li>
-                        <li><a href="https://docs.upgrade-doge.xyz/" className="nav-link px-2 link-dark">Docs</a></li>
+                    <ul className="nav nav-pills">
+                        <li>
+                            <a href="/#/parser" className={"nav-link px-4 " + (route == 'parser' ? 'active' : 'link-dark')} onClick={() => {
+                                setRoute('parser');
+                            }}>Parser</a>
+                        </li>
+                        <li>
+                            <a href="/#/notifier" className={"nav-link px-4 " + (route == 'notifier' ? 'active' : 'link-dark')} onClick={() => {
+                                setRoute('notifier');
+                            }}>Notifier</a>
+                        </li>
+                        <li><a href="https://docs.upgrade-doge.xyz/" className="nav-link px-4 link-dark">Docs</a></li>
                     </ul>
                     <div className="col-md-3 text-end">
                         {isConnected ?

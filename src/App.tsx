@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
-import Main from './pages/main'
+import Main from './pages/parser'
 import { Layout } from './layout'
 import { HashRouter } from 'react-router-dom'
 import GetRoutes from "./routes"

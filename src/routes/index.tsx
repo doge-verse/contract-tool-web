@@ -6,7 +6,12 @@ const routes = [
     {
         path: '/',
         name: 'Parser',
-        loader: () => import('../pages/main')
+        loader: () => import('../pages/parser')
+    },
+    {
+        path: '/parser',
+        name: 'Parser',
+        loader: () => import('../pages/parser')
     },
     
     {
