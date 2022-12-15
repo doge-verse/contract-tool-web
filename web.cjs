@@ -3,13 +3,7 @@ const enforce = require('express-sslify');
 const compression = require('compression');
 const myApp = express();
 const port = 4200;
-const API_URL = process.env.API_URL || 'https://account-test.spacescope.io';
 
-console.log(API_URL, process.env.API_URL)
-if (process.env.SSLREDIRECT && process.env.SSLREDIRECT !== 'false') {
-  myApp.use(enforce.HTTPS({ trustProtoHeader: true }));
-  console.log('ssl redirect enabled.');
-}
 myApp.use(compression());
 myApp.use(
   express.static('./dist', {
