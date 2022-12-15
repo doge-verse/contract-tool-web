@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import Main from './pages/main'
 import { Layout } from './layout'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import GetRoutes from "./routes"
 
 function App() {
@@ -12,9 +12,9 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <BrowserRouter>
+        <HashRouter>
           <GetRoutes />
-        </BrowserRouter>
+        </HashRouter>
       </Layout>
     </div>
   )
