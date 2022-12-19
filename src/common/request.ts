@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL =
-  'http://107.173.87.120:8080/api/';
+  'https://doge.instruments.sbs/api/';
 
 export const request = axios.create({
   baseURL,
