@@ -15,7 +15,7 @@ export default () => {
     const [addressFormat, setAddressFormat] = useState(storage.getItem('addressFormat'));
     const [walletAddress, setWalletAddress] = useState(storage.getItem('walletAddress'));
     const [loginToken, setLoginToken] = useState(storage.getItem('loginToken'));
-    const [route, setRoute] = useState('parser');
+    const [route, setRoute] = useState(window.location.hash.split('/')[window.location.hash.split('/').length - 1]);
 
     useEffect(() => {
         if (loginToken && isConnected) {
