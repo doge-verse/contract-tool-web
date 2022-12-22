@@ -315,6 +315,7 @@ export default function CollapsibleTable() {
                         disablePortal
                         id="combo-box-demo"
                         options={[
+                            { label: 'FVM', year: 0 },
                             { label: 'Eth Mainnet', year: 1 },
                             { label: 'Polygon Mainnet', year: 137 },
                             { label: 'Goerli Testnet', year: 5 },
