@@ -27,6 +27,7 @@ import Alert from '@mui/material/Alert';
 
 
 const networks = [
+    { label: 'FVM Testnet', value: 31415 },
     { label: 'Eth Mainnet', value: 1 },
     { label: 'Polygon Mainnet', value: 137 },
     { label: 'Goerli Testnet', value: 5 },
@@ -315,7 +316,7 @@ export default function CollapsibleTable() {
                         disablePortal
                         id="combo-box-demo"
                         options={[
-                            { label: 'FVM', year: 0 },
+                            { label: 'FVM Testnet', year: 31415 },
                             { label: 'Eth Mainnet', year: 1 },
                             { label: 'Polygon Mainnet', year: 137 },
                             { label: 'Goerli Testnet', year: 5 },
