@@ -6,6 +6,8 @@
 
 Upgradeable smart contract toolkit
 
+[Back-end Repo](https://github.com/doge-verse/easy-upgrade-backend)
+
 ### Background
 
 Deployment of upgradeable smart contracts enables rapid iteration of new project features and reduces the impact of fatal bugs on the project.
